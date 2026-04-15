@@ -12,8 +12,8 @@ export default function Message({ content, role, timestamp }: MessageProps) {
       <div
         className={`max-w-xs px-4 py-2 rounded-lg shadow text-sm ${
           isUser
-            ? "bg-blue-500 text-white"
-            : "bg-gray-200 text-black"
+            ? "bg-blue-600 text-white"
+            : "bg-gray-800 text-gray-200"
         }`}
       >
         <p>{content}</p>

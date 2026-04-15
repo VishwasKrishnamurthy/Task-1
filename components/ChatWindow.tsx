@@ -13,6 +13,7 @@ type MessageType = {
 
 export default function ChatWindow() {
   const [messages, setMessages] = useState<MessageType[]>([]);
+  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
@@ -40,11 +41,17 @@ export default function ChatWindow() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({
+          message: text,
+          chatId: currentChatId,
+        }),
       });
-
+        
       const data = await response.json();
 
+      if (!currentChatId) {
+        setCurrentChatId(data.chatId);  
+      }
       const botMessage = {
         id: (Date.now() + 1).toString(),
         content: data.reply,
@@ -72,31 +79,42 @@ export default function ChatWindow() {
   };
 
   return (
-    <div
-      className={`flex flex-col h-screen max-w-2xl mx-auto border rounded-lg shadow-lg ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
-      }`}
-    >
+    <div className="flex flex-col h-full w-full border-l">
       {/* Header */}
-     <div className="p-4 border-b bg-blue-600 text-white flex items-center justify-between">
+     <div
+    className={`p-4 border-b flex items-center justify-between ${
+      darkMode
+           ? "bg-[#020617] border-gray-800"
+           : "bg-white border-gray-200"
+       }`}
+      >
 
   {/* Title */}
-  <h1 className="text-lg font-semibold pr-6">
-    Metawurks Chatbot
-  </h1>
+    <h1 className={`text-lg font-semibold tracking-wide ${
+  darkMode ? "text-gray-200" : "text-gray-800"
+}`}>
+      Metawurks Chatbot
+    </h1>
 
   {/* Buttons */}
   <div className="flex gap-3 ml-6">
     <button
-      onClick={() => setDarkMode(!darkMode)}
-      className="text-sm bg-white text-blue-600 px-4 py-1.5 rounded-md hover:bg-gray-100"
-    >
+      onClick={() => {
+            setDarkMode(prev => !prev);
+            document.documentElement.classList.toggle("dark");
+        }}
+      className="text-sm bg-gray-800 text-gray-200 px-4 py-1.5 rounded-md hover:bg-gray-700 transition"
+      >
       {darkMode ? "Light Mode" : "Dark Mode"}
     </button>
 
     <button
       onClick={clearChat}
-      className="text-sm bg-white text-blue-600 px-4 py-1.5 rounded-md hover:bg-gray-100"
+      className={`text-sm px-4 py-1.5 rounded-md ${
+  darkMode
+    ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
+    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+}`}
     >
       Clear Chat
     </button>
@@ -107,13 +125,13 @@ export default function ChatWindow() {
       {/* Messages */}
       <div
         className={`flex-1 overflow-y-auto p-4 space-y-2 ${
-          darkMode ? "bg-gray-800" : "bg-gray-50"
+          darkMode ? "bg-[#020617]" : "bg-gray-100" 
         }`}
       >
         {messages.length === 0 ? (
-          <p className="text-gray-400 text-center">
-            Start the conversation...
-          </p>
+          <div className="flex h-full items-center justify-center text-gray-500 text-lg">
+            Start a conversation 
+          </div>
         ) : (
           <>
             {messages.map((msg) => (

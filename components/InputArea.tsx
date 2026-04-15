@@ -17,7 +17,7 @@ export default function InputArea({ onSend }: InputAreaProps) {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-3 max-w-3xl mx-auto bg-white border-gray-300 rounded-xl px-3 py-2 shadow-sm">
       <input
         type="text"
         className="flex-1 border rounded-lg px-3 py-2 outline-none"
@@ -30,7 +30,7 @@ export default function InputArea({ onSend }: InputAreaProps) {
       />
 
       <button
-        className="bg-blue-600 text-white px-4 rounded-lg disabled:bg-gray-400"
+        className="bg-blue-600 text-white px-5 rounded-lg hover:bg-blue-400"
         onClick={handleSend}
         disabled={!input.trim()}
       >
